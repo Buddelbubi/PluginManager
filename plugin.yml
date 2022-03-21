@@ -1,0 +1,31 @@
+name: PluginManager
+version: 1.0.3
+main: de.buddelbubi.PluginManagerInstance
+api: 1.0.13
+author: Buddelbubi
+description: PluginManager is a plugin management plugin for nukkit.
+load: STARTUP
+website: https://www.cloudburstmc.org/resources/pluginmanager.776/
+permissions:
+   pluginmanager.ui:
+      description: "The permission to open the PluginManager UI"
+      default: op
+   pluginmanager.load:
+      description: "The permission to be able to load a plugin"
+      default: op
+   pluginmanager.unload:
+      description: "The permission to be able to unload a plugin"
+      default: op
+   pluginmanager.enable:
+      description: "The permission to be able to enable a plugin"
+      default: op
+   pluginmanager.disable:
+      description: "The permission to be able to disable a plugin"
+      default: op
+   pluginmanager.reload:
+      description: "The permission to be able to reload a plugin"
+      default: op
+   pluginmanager.config.*:
+      description: "e.g. pluginmanager.config.home.server.plugins.exampleplugin.config.yml"
+      default: op
+   
