@@ -1,6 +1,6 @@
 # PluginManager
 
-![grafik](https://cloudburstmc.org/attachments/pluginmanagerlong-png.3442/
+![grafik](https://cloudburstmc.org/attachments/pluginmanagerlong-png.3442/)
 
 
 A Plugin to manage all of your servers plugins and also a tool to speed up plugin development
