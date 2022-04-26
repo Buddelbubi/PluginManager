@@ -78,6 +78,8 @@ public class UIListener implements Listener{
 						}
 						if(pl.getPrefix() != null) content += "§ePrefix: §8" + pl.getPrefix() + "\n";
 						if(pl.getWebsite() != null) content += "§eWebsite: §8" + pl.getWebsite() + "\n";
+						File file = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+						content += "§eFile Name: §8" + file.getName() + "\n";
 						if(pl.getDepend() != null) {
 							String depend = "§eDepending Plugins: §8\n";
 							int length = pl.getDepend().size();

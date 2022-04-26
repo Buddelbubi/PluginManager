@@ -4,6 +4,7 @@ import cn.nukkit.Server;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import de.buddelbubi.PluginManagerInstance;
 import de.buddelbubi.utils.PluginManagerAPI;
 
 public class PluginManagerReloadCommand extends Command {
@@ -20,7 +21,12 @@ public class PluginManagerReloadCommand extends Command {
 		
 		if(args.length == 0) {
 			
-			PluginManagerAPI.reloadServer();
+			try {
+				PluginManagerAPI.reloadServer();
+			} catch (Exception e) {
+				Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "Casual reload failed! Now trying outside a new task.");
+				Server.getInstance().reload();
+			}
 			
 		} else {
 			Server.getInstance().dispatchCommand(arg0, "pluginmanager reload " + args[0]);

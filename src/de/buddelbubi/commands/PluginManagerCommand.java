@@ -25,9 +25,6 @@ public class PluginManagerCommand extends Command{
 		
 		String prefix = PluginManagerInstance.prefix;
 		
-		
-		
-		
 		if(args.length >= 1) {
 		
 			if(!arg0.hasPermission("pluginmanager." + args[0])) {
@@ -71,9 +68,16 @@ public class PluginManagerCommand extends Command{
 				
 				if(args.length == 2) {
 					
-				
 						Plugin plugin = Server.getInstance().getPluginManager().getPlugin(args[1]);
 	
+						if(plugin == null) {
+							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
+								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+									plugin = pl;
+								}
+							}
+						}
+						
 						if(plugin == PluginManagerInstance.plugin) {
 							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
 							return false;
@@ -101,6 +105,14 @@ public class PluginManagerCommand extends Command{
 				
 						Plugin plugin = Server.getInstance().getPluginManager().getPlugin(args[1]);
 	
+						if(plugin == null) {
+							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
+								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+									plugin = pl;
+								}
+							}
+						}
+						
 						if(plugin != null) {
 						
 							if(plugin.isEnabled()) {
@@ -135,6 +147,14 @@ public class PluginManagerCommand extends Command{
 							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
 							return false;
 						}
+					
+						if(plugin == null) {
+							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
+								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+									plugin = pl;
+								}
+							}
+						}
 						
 						if(plugin != null) {
 						
@@ -164,8 +184,18 @@ public class PluginManagerCommand extends Command{
 							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
 							return false;
 						}
+						
+						if(plugin == null) {
+							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
+								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+									plugin = pl;
+								}
+							}
+						}
 	
 						if(plugin != null) {
+							
+							
 							
 							File file = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 							

@@ -17,7 +17,6 @@ public class WorkArounds {
 	
 	
 	
-	@SuppressWarnings("unused")
 	private static Object getPrivateField(Object object, String field)throws SecurityException,
     NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
     Class<?> clazz = object.getClass();
@@ -70,9 +69,13 @@ public class WorkArounds {
 	        HashMap<String, String> cmdds = new HashMap<>();
 	        
 	        for(Command c : Server.getInstance().getCommandMap().getCommands().values()) {
-	        	if(cmdds.containsKey(c.getClass().getName())) {
-	        		cmdds.put(c.getClass().getName(),cmdds.get(c.getClass().getName()) + ">>>" + c.getName());
-	        	} else cmdds.put(c.getClass().getName(), c.getName());
+	        	try {
+	        		if(cmdds.containsKey(c.getClass().getName())) {
+		        		cmdds.put(c.getClass().getName(),cmdds.get(c.getClass().getName()) + ">>>" + c.getName());
+		        	} else cmdds.put(c.getClass().getName(), c.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 	        }
 	        
 	        Object files = getPrivateField(Server.getInstance().getPluginManager(), "fileAssociations");
@@ -80,41 +83,41 @@ public class WorkArounds {
 	        HashMap<String, PluginLoader> fileAssociations = (HashMap<String, PluginLoader>) files;
 	        for(PluginLoader p : fileAssociations.values()) {
 	        	
-	        	Object map2 = getPrivateField(p, "classLoaders");
-		        @SuppressWarnings("unchecked")
-		        HashMap<String, PluginClassLoader> classes = (HashMap<String, PluginClassLoader>) map2;
-		        
-		        Object map4 = getPrivateField(p, "classes");
-		        @SuppressWarnings({ "unchecked", "rawtypes" })
-		        HashMap<String, Class> packs = (HashMap<String, Class>) map4;
-		        
-		       // for(String s : packs.keySet()) System.out.println("1 " + s);
-		        
-		        
-		        PluginClassLoader loader = classes.get(plugin.getName());
-		        Object map3 = getPrivateField(loader, "classes");
-		        @SuppressWarnings({ "unchecked", "rawtypes" })
-		        HashMap<String, Class> classess = (HashMap<String, Class>) map3;
-		        for(Class<?> s : classess.values()) {
-		      
-		        	packs.remove(s.getName());
-		        	
-		        	if(cmdds.containsKey(s.getName())) for(String ss : cmdds.get(s.getName()).split(">>>")) if(!commands.contains(knownCommands.get(ss))) commands.add(knownCommands.get(ss));
-		        	
-		        }
-		  
-		        for(Command c : commands) unregisterCommand(c);
-		        
-		        classess.clear();
-		      
-		        classes.remove(plugin.getName());
+	        	try {
+	        		Object map2 = getPrivateField(p, "classLoaders");
+			        @SuppressWarnings("unchecked")
+			        HashMap<String, PluginClassLoader> classes = (HashMap<String, PluginClassLoader>) map2;
+			        
+			        Object map4 = getPrivateField(p, "classes");
+			        @SuppressWarnings({ "unchecked", "rawtypes" })
+			        HashMap<String, Class> packs = (HashMap<String, Class>) map4;
+			        
+			       // for(String s : packs.keySet()) System.out.println("1 " + s);
+			        
+			        
+			        PluginClassLoader loader = classes.get(plugin.getName());
+			        Object map3 = getPrivateField(loader, "classes");
+			        @SuppressWarnings({ "unchecked", "rawtypes" })
+			        HashMap<String, Class> classess = (HashMap<String, Class>) map3;
+			        for(Class<?> s : classess.values()) {
+			      
+			        	packs.remove(s.getName());
+			        	
+			        	if(cmdds.containsKey(s.getName())) for(String ss : cmdds.get(s.getName()).split(">>>")) if(!commands.contains(knownCommands.get(ss))) commands.add(knownCommands.get(ss));
+			        	
+			        }
+			  
+			        for(Command c : commands) unregisterCommand(c);
+			        
+			        classess.clear();
+			      
+			        classes.remove(plugin.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 	        }
-	       
-	       
-	        
-	        
-	        
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
@@ -133,10 +136,13 @@ public class WorkArounds {
 	        HashMap<String, String> cmdds = new HashMap<>();
 
 	        for(Command c : Server.getInstance().getCommandMap().getCommands().values()) {
-	       
-	        	if(cmdds.containsKey(c.getClass().getName())) {
-	        		cmdds.put(c.getClass().getName(),cmdds.get(c.getClass().getName()) + ">>>" + c.getName());
-	        	} else cmdds.put(c.getClass().getName(), c.getName());
+	        	try {
+	        		if(cmdds.containsKey(c.getClass().getName())) {
+		        		cmdds.put(c.getClass().getName(),cmdds.get(c.getClass().getName()) + ">>>" + c.getName());
+		        	} else cmdds.put(c.getClass().getName(), c.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 	        }
 	     
 	        
@@ -145,6 +151,7 @@ public class WorkArounds {
 	        HashMap<String, PluginLoader> fileAssociations = (HashMap<String, PluginLoader>) files;
 	        for(PluginLoader p : fileAssociations.values()) {
 	        	
+	        try {
 	        	Object map2 = getPrivateField(p, "classLoaders");
 		        @SuppressWarnings("unchecked")
 		        HashMap<String, PluginClassLoader> classes = (HashMap<String, PluginClassLoader>) map2;
@@ -155,8 +162,15 @@ public class WorkArounds {
 		        @SuppressWarnings({ "unchecked", "rawtypes" })
 		        HashMap<String, Class> classess = (HashMap<String, Class>) map3;
 		        for(Class<?> s : classess.values()) {	
-		        	if(cmdds.containsKey(s.getName())) for(String ss : cmdds.get(s.getName()).split(">>>")) if(!commands.contains(knownCommands.get(ss))) commands.add(knownCommands.get(ss));
+		        	try {
+		        		if(cmdds.containsKey(s.getName())) for(String ss : cmdds.get(s.getName()).split(">>>")) if(!commands.contains(knownCommands.get(ss))) commands.add(knownCommands.get(ss));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	
 	        }
 
