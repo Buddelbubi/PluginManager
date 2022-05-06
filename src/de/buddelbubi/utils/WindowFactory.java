@@ -33,4 +33,17 @@ public class WindowFactory {
 		
 	}
 	
+	public static void openPluginWindow(Player p, Plugin plugin) {
+		
+		FormWindowSimple fw = new FormWindowSimple(PluginManagerInstance.prefix + "" + plugin.getName(), "񘿹�3");
+		fw.addButton(new ElementButton("Plugin Info",new ElementButtonImageData("path", "textures/ui/infobulb_darkborder_small.png")));
+		fw.addButton(new ElementButton("Config Files", new ElementButtonImageData("path", "textures/ui/settings_glyph_color_2x.png")));
+		
+		if(!PluginManagerInstance.plugin.getName().equals(plugin.getName()))
+		fw.addButton(new ElementButton("Management", new ElementButtonImageData("path", "textures/ui/op.png")));
+		
+		p.showFormWindow(fw);
+		
+	}
+	
 }

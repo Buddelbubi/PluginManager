@@ -24,6 +24,7 @@ import cn.nukkit.utils.Config;
 import de.buddelbubi.PluginManagerInstance;
 import de.buddelbubi.utils.PluginManagerAPI;
 import de.buddelbubi.utils.TextFormat;
+import de.buddelbubi.utils.WindowFactory;
 import de.buddelbubi.utils.WorkArounds;
 
 public class UIListener implements Listener{
@@ -39,14 +40,8 @@ public class UIListener implements Listener{
 				if(fwresponse.getTitle().equals(PluginManagerInstance.prefix + "§eInstalled Plugins")) {
 					
 					String plugin = fwresponse.getResponse().getClickedButton().getText().split("\\s+")[0].replace("§7", "");
-					FormWindowSimple fw = new FormWindowSimple(PluginManagerInstance.prefix + "§e" + plugin, "§7§1§3");
-					fw.addButton(new ElementButton("Plugin Info",new ElementButtonImageData("path", "textures/ui/infobulb_darkborder_small.png")));
-					fw.addButton(new ElementButton("Config Files", new ElementButtonImageData("path", "textures/ui/settings_glyph_color_2x.png")));
-					
-					if(!PluginManagerInstance.plugin.getName().equals(plugin))
-					fw.addButton(new ElementButton("Management", new ElementButtonImageData("path", "textures/ui/op.png")));
-					
-					e.getPlayer().showFormWindow(fw);
+					Plugin pl = Server.getInstance().getPluginManager().getPlugin(plugin);
+					WindowFactory.openPluginWindow(e.getPlayer(), pl);
 					
 					
 					//yup. I will think about this again xd 
@@ -248,7 +243,7 @@ public class UIListener implements Listener{
 						Config c = new Config(file);
 						FormWindowCustom fw = new FormWindowCustom("§5§9§e" + file.getAbsolutePath());
 						
-						if(!e.getPlayer().hasPermission("pluginmanager.config." + file.getAbsolutePath().replace("/", "."))) {
+						if(!e.getPlayer().hasPermission("pluginmanager.config." + file.getAbsolutePath().replace("/", ".")) && !e.getPlayer().hasPermission("pluginmanager.admin")) {
 							
 							e.getPlayer().sendMessage(PluginManagerInstance.prefix + "§cYou are lacking the permission 'pluginmanager.config." + file.getAbsolutePath().replace("/", ".") + "'.");
 							return;

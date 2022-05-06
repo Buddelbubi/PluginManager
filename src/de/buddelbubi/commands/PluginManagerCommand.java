@@ -27,7 +27,7 @@ public class PluginManagerCommand extends Command{
 		
 		if(args.length >= 1) {
 		
-			if(!arg0.hasPermission("pluginmanager." + args[0])) {
+			if(!arg0.hasPermission("pluginmanager." + args[0]) && !arg0.hasPermission("pluginmanager.admin")) {
 				
 				arg0.sendMessage(prefix + "§cYou are lacking the permission 'pluginmanager." + args[0] + "'.");
 				return false;
@@ -39,7 +39,27 @@ public class PluginManagerCommand extends Command{
 				if(args.length == 2) {
 					
 					File file = new File(Server.getInstance().getPluginPath(), (args[1].contains(".jar") ? args[1] : args[1] + ".jar"));
+					
+					if(!file.exists()) {
+						
+						for(File f : new File(Server.getInstance().getPluginPath()).listFiles()) {
+							if(f.getName().startsWith(args[1])) {
+								file = f;
+								break;
+							}
+						}
+						
+					}
+					
 					if(file.exists()) {
+						
+						for(Plugin plugin : Server.getInstance().getPluginManager().getPlugins().values()) {
+							File pluginfile = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+							if(file.getName().equals(pluginfile.getName())) {
+								arg0.sendMessage(prefix + "§c " + plugin.getName() + " is already loaded. Use /pluginmanager reload instead.");
+								return false;
+							}
+						}
 						
 						Plugin plugin = Server.getInstance().getPluginManager().loadPlugin(file);
 	
@@ -79,7 +99,7 @@ public class PluginManagerCommand extends Command{
 						}
 						
 						if(plugin == PluginManagerInstance.plugin) {
-							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
+							arg0.sendMessage(prefix + "§cYou can not unload PluginManager.");
 							return false;
 						}
 						
@@ -143,11 +163,6 @@ public class PluginManagerCommand extends Command{
 				
 						Plugin plugin = Server.getInstance().getPluginManager().getPlugin(args[1]);
 					
-						if(plugin == PluginManagerInstance.plugin) {
-							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
-							return false;
-						}
-					
 						if(plugin == null) {
 							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
 								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
@@ -156,6 +171,11 @@ public class PluginManagerCommand extends Command{
 							}
 						}
 						
+						if(plugin == PluginManagerInstance.plugin) {
+							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
+							return false;
+						}
+					
 						if(plugin != null) {
 						
 							if(!plugin.isEnabled()) {
@@ -180,11 +200,6 @@ public class PluginManagerCommand extends Command{
 				
 						Plugin plugin = Server.getInstance().getPluginManager().getPlugin(args[1]);
 						
-						if(plugin == PluginManagerInstance.plugin) {
-							arg0.sendMessage(prefix + "§cYou can not disable PluginManager.");
-							return false;
-						}
-						
 						if(plugin == null) {
 							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
 								if(pl.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
@@ -192,11 +207,15 @@ public class PluginManagerCommand extends Command{
 								}
 							}
 						}
+						
+						if(plugin == PluginManagerInstance.plugin) {
+							arg0.sendMessage(prefix + "§cYou can not reload PluginManager.");
+							return false;
+						}
+						
 	
 						if(plugin != null) {
-							
-							
-							
+								
 							File file = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 							
 							long millis = System.currentTimeMillis();
@@ -214,7 +233,6 @@ public class PluginManagerCommand extends Command{
 							try {
 								Server.getInstance().enablePlugin(Server.getInstance().getPluginManager().loadPlugin(file)); 
 							} catch (Exception e) {
-								arg0.sendMessage(prefix + "§cCouldn't load Plugin " + plugin.getName() + ". File renamed or deleted?"); 
 							}
 							
 							
@@ -255,7 +273,28 @@ public class PluginManagerCommand extends Command{
 				break;
 				
 			default:
-				arg0.sendMessage(prefix + "§cDo /pluginmanager help");
+				if(arg0 instanceof Player) {
+					Player p = (Player) arg0;
+					
+					if(p.hasPermission("pluginmanager.ui")|| p.hasPermission("pluginmanager.admin")) {
+					
+						Plugin plugin = Server.getInstance().getPluginManager().getPlugin(args[0]);
+				
+						if(plugin == null) {
+							for(Plugin pl : Server.getInstance().getPluginManager().getPlugins().values()) {
+								if(pl.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+									plugin = pl;
+								}
+							}
+						}
+						if(plugin != null) {
+				
+							WindowFactory.openPluginWindow(p, plugin);
+					
+						} else arg0.sendMessage(prefix + "§cCould not find a plugin called " + args[0]+ ". Do /pluginmanager help");
+					} else p.sendMessage(prefix + "§cYou are lacking the permission 'pluginmanager.ui'"); 
+				}  else arg0.sendMessage(prefix + "§cDo /pluginmanager help");
+				
 				break;
 			}
 			
@@ -264,7 +303,7 @@ public class PluginManagerCommand extends Command{
 				
 				Player p = (Player) arg0;
 				
-				if(p.hasPermission("pluginmanager.ui"))
+				if(p.hasPermission("pluginmanager.ui") || p.hasPermission("pluginmanager.admin"))
 				
 				WindowFactory.openPluginListWindow(p);
 				
