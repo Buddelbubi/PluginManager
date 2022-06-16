@@ -16,7 +16,6 @@ public class PluginManagerCommand extends Command{
 
 	public PluginManagerCommand(String name) {
 		super(name);
-		
 	}
 
 	@Override
