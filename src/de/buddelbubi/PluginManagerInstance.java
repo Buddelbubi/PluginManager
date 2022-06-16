@@ -2,12 +2,14 @@ package de.buddelbubi;
 
 import cn.nukkit.Server;
 
+
 import cn.nukkit.command.Command;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.PluginManager;
 import de.buddelbubi.commands.PluginManagerCommand;
 import de.buddelbubi.commands.PluginManagerReloadCommand;
+import de.buddelbubi.listeners.PluginCallListener;
 import de.buddelbubi.listeners.UIListener;
 
 public class PluginManagerInstance extends PluginBase {
@@ -32,8 +34,7 @@ public class PluginManagerInstance extends PluginBase {
 		getServer().getCommandMap().register(reload.getName(), reload);
 		
 		getServer().getPluginManager().registerEvents(new UIListener(), this);
-		
-		
+		getServer().getPluginManager().registerEvents(new PluginCallListener(), this);
 		
 	}
 	
