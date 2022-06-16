@@ -30,22 +30,24 @@ public class WorkArounds {
 	public static void unregisterCommand(Command cmd) {
 	    try {
 	    	
-	        Object map = getPrivateField(Server.getInstance().getCommandMap(), "knownCommands");
+	      //  Object map = getPrivateField(Server.getInstance().getCommandMap(), "knownCommands");
 	        @SuppressWarnings("unchecked")
-	        HashMap<String, Command> knownCommands = (HashMap<String, Command>) map;
+			HashMap<String, Command> knownCommands = (HashMap<String, Command>) getPrivateField(Server.getInstance().getCommandMap(), "knownCommands");
+
 	       if(knownCommands.containsKey(cmd.getName())) knownCommands.remove(cmd.getName());
+	       if(knownCommands.containsKey(cmd.getName() + ":" + cmd.getName())) knownCommands.remove(cmd.getName()+ ":" + cmd.getName());
 	        for (String alias : cmd.getAliases()){
+	           if(knownCommands.containsKey(cmd.getName() + ":" + alias)){
+	                knownCommands.remove(cmd.getName() + ":" + alias);
+	            }
 	           if(knownCommands.containsKey(alias)){
 	                knownCommands.remove(alias);
 	            }
 	        }
-	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 	}
-	
-	//Jup. You cant read that code. I cant neighter.. After 4 hours of testing it finally works and I dont want to touch it again. :)
 	
 	public static void unregisterPlugin(Plugin plugin) {
 	    try {
@@ -91,14 +93,11 @@ public class WorkArounds {
 			        Object map4 = getPrivateField(p, "classes");
 			        @SuppressWarnings({ "unchecked", "rawtypes" })
 			        HashMap<String, Class> packs = (HashMap<String, Class>) map4;
-			        
-			       // for(String s : packs.keySet()) System.out.println("1 " + s);
-			        
+			        			        
 			        
 			        PluginClassLoader loader = classes.get(plugin.getName());
-			        Object map3 = getPrivateField(loader, "classes");
 			        @SuppressWarnings({ "unchecked", "rawtypes" })
-			        HashMap<String, Class> classess = (HashMap<String, Class>) map3;
+			        HashMap<String, Class> classess = (HashMap<String, Class>) getPrivateField(loader, "classes");
 			        for(Class<?> s : classess.values()) {
 			      
 			        	packs.remove(s.getName());
@@ -106,11 +105,17 @@ public class WorkArounds {
 			        	if(cmdds.containsKey(s.getName())) for(String ss : cmdds.get(s.getName()).split(">>>")) if(!commands.contains(knownCommands.get(ss))) commands.add(knownCommands.get(ss));
 			        	
 			        }
-			  
-			        for(Command c : commands) unregisterCommand(c);
+			        
+			        commands = findCommands(plugin);
+			        
+			        for(Command c : commands) {
+			        	
+			        	unregisterCommand(c);
+			        }
 			        
 			        classess.clear();
-			      
+			   
+			        
 			        classes.remove(plugin.getName());
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -121,13 +126,21 @@ public class WorkArounds {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	    
 	}
 	
 	public static List<Command> findCommands(Plugin plugin) {
 		
 		List<Command> commands = new ArrayList<>();
 		
-	    try {
+		for(Object c : plugin.getDescription().getCommands().values()) {
+			if(c instanceof Command) {
+				Command command = (Command) c;
+				commands.add(command);
+			}
+		}
+		
+		try {
 	    
 	        Object cmds = getPrivateField(Server.getInstance().getCommandMap(), "knownCommands");
 	        @SuppressWarnings("unchecked")
@@ -155,7 +168,8 @@ public class WorkArounds {
 	        	Object map2 = getPrivateField(p, "classLoaders");
 		        @SuppressWarnings("unchecked")
 		        HashMap<String, PluginClassLoader> classes = (HashMap<String, PluginClassLoader>) map2;
-
+		        
+		        
 		        
 		        PluginClassLoader loader = classes.get(plugin.getName());
 		        Object map3 = getPrivateField(loader, "classes");

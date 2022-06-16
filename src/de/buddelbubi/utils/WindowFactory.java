@@ -29,20 +29,20 @@ public class WindowFactory {
 			fw.addButton(new ElementButton("§7" + TextFormat.getFormatedPluginName(pl), pl.getDescription().getWebsite() != null ? new ElementButtonImageData("url", img) : new ElementButtonImageData("path", "textures/ui/gear.png")));
 			
 		}
-		p.showFormWindow(fw);
+		p.showFormWindow(fw, "pm-installedplugins".hashCode());
 		
 	}
 	
 	public static void openPluginWindow(Player p, Plugin plugin) {
 		
-		FormWindowSimple fw = new FormWindowSimple(PluginManagerInstance.prefix + "§e" + plugin.getName(), "§7§1§3");
+		FormWindowSimple fw = new FormWindowSimple(PluginManagerInstance.prefix + "§e" + plugin.getName(), "");
 		fw.addButton(new ElementButton("Plugin Info",new ElementButtonImageData("path", "textures/ui/infobulb_darkborder_small.png")));
 		fw.addButton(new ElementButton("Config Files", new ElementButtonImageData("path", "textures/ui/settings_glyph_color_2x.png")));
 		
 		if(!PluginManagerInstance.plugin.getName().equals(plugin.getName()))
 		fw.addButton(new ElementButton("Management", new ElementButtonImageData("path", "textures/ui/op.png")));
 		
-		p.showFormWindow(fw);
+		p.showFormWindow(fw, "pm-pluginmenu".hashCode());
 		
 	}
 	

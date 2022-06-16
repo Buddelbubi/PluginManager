@@ -15,10 +15,14 @@ public class PluginManagerAPI {
 			@Override
 			public void run() {
 				
-				long millis = System.currentTimeMillis();
-				Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "§eReloading the Server...");
-				Server.getInstance().reload();
-				Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "§eServer reloaded in " + (System.currentTimeMillis() - millis) + " milliseconds.");
+				try {
+					long millis = System.currentTimeMillis();
+					Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "§eReloading the Server...");
+					Server.getInstance().reload();
+					Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "§eServer reloaded in " + (System.currentTimeMillis() - millis) + " milliseconds.");
+				} catch (Exception e) {
+					Server.getInstance().broadcastMessage(PluginManagerInstance.prefix + "§cCould not reload the server. Please initialize a reboot.");
+				}
 				
 				
 			}
